@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+<head>
+<meta charset="UTF-8">
+<title>부서정보수정</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+	<form th:object="${deptInfo}">
+		<div>
+			<label for="deptId">부서번호</label><br>
+			<input type="number" th:field="*{departmentId}" readonly><hr>
+		</div>
+		<div>
+			<label for="deptName">부서명</label><br>
+			<input type="text" th:field="*{departmentName}"><hr>
+		</div>
+		<div>
+			<label for="mId">부서장번호</label><br>
+			<input type="number" th:field="*{managerId}"><hr>
+		</div>
+		<div>
+			<label for="lId">지역번호</label><br>
+			<input type="number" th:field="*{locationId}"><hr>
+		</div>
+		<div>
+			<button type="button" id="updateBtn">저장</button>
+		</div>
+	</form>
+	<script>
+		$('#updateBtn').on('click', updateAjax);
+		
+		function updateAjax(event) {
+			// 1) Validation Check
+			//if(validationCheck() == false) return;
+			if(!validationCheck()) return;
+			
+			// 2) 보낼 데이터 정리
+			let dataObj = getDeptObj();
+			
+			// 3) AJAX
+			$.ajax('deptUpdate', {
+				type : 'post',
+				data : dataObj  // 객체 => QueryString
+			})
+			.done(result => {
+				console.log(result);
+			})
+			.fail(err => console.log(err));
+		};
+		
+		function validationCheck() {
+			let name = $('#departmentName');
+			if(name.val() == '') {
+				alert('부서이름은 필수로 입력해야 합니다.');
+				name.focus();
+				return false;
+			}
+			return true;
+		};
+		
+		function getDeptObj() {
+			let formAry = $('form').serializeArray();
+			
+			let formObj = {};
+			formAry.forEach(inputTag => {
+				formObj[inputTag.name] = inputTag.value;
+			});
+		
+			return formObj;
+		};
+	</script>
+</body>
+</html>

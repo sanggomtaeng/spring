@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{common/layouts/default_layout}"
+	  layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>사원 정보 등록</title>
+</head>
+<body>
+	<form name="insertForm" 
+		 th:action="@{/empInsert}" method="post" th:object="${empVO}">
+		<div>
+			<label for="employeeId">이름</label>
+			<input type="text" th:field="*{lastName}" >
+		</div>
+		<div>
+			<label for="email">이메일</label>
+			<input type="email" th:field="*{email}">
+		</div>
+		<div>
+			<label for="hireDate">입사일</label>
+			<input type="date" th:field="*{hireDate}">
+		</div>
+		<div>
+			<label for="jobId">업무</label>
+			<input type="text" th:field="*{jobId}">
+		</div>
+		<div>
+			<label for="sal">급여</label>
+			<input type="number" id="sal" th:field="*{salary}">
+		</div>
+		<div>
+			<button type="submit">저장</button>
+		</div>
+	</form>
+</body>
+</html>
