@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,13 +16,45 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 public class UploadController {
 	@Value("${file.upload.path}")
-	private String uploadPath;
-	@GetMapping("upload")
-	public void getUploadPath() {
+	private String uploadPath = "C:\\upload";
+	
+	@GetMapping("formUpload")
+	public void formUploadPage() {}
+	
+	@PostMapping("uploadForm")
+	public String formUploadFile(@RequestPart MultipartFile[] images) {
+		log.info(uploadPath);
+		for(MultipartFile image : images) {
+			log.info(image.getContentType());			// 개별 파일의 종류
+			log.info(image.getOriginalFilename());		// 사용자가 넘겨준 실제 파일이름
+			log.info(String.valueOf(image.getSize()));	// 파일크기
+			
+			String fileName = image.getOriginalFilename();
+			String saveName = uploadPath + File.separator + fileName;
+			
+			log.debug("saveName : " + saveName);
+			
+			Path savePath = Paths.get(saveName);
+			
+			try {
+				image.transferTo(savePath);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return "formUpload";
 	}
+	
+	@GetMapping("upload")
+	public void uploadPage() {}
+	
 	@PostMapping("/uploadsAjax")
 	@ResponseBody
 	public List<String> uploadFile(@RequestPart MultipartFile[] uploadFiles) {
