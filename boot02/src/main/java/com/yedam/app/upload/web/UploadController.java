@@ -23,18 +23,18 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class UploadController {
 	@Value("${file.upload.path}")
-	private String uploadPath = "C:\\upload";
+	private String uploadPath;	
 	
 	@GetMapping("formUpload")
 	public void formUploadPage() {}
 	
 	@PostMapping("uploadForm")
-	public String formUploadFile(@RequestPart MultipartFile[] images) {
+	public String fomrUploadFile(@RequestPart MultipartFile[] images) {
 		log.info(uploadPath);
 		for(MultipartFile image : images) {
-			log.info(image.getContentType());			// 개별 파일의 종류
-			log.info(image.getOriginalFilename());		// 사용자가 넘겨준 실제 파일이름
-			log.info(String.valueOf(image.getSize()));	// 파일크기
+			log.info(image.getContentType()); // 개별 파일의 종류
+			log.info(image.getOriginalFilename()); // 사용자가 넘겨준 실제 파일이름
+			log.info(String.valueOf(image.getSize())); // 파일크기
 			
 			String fileName = image.getOriginalFilename();
 			String saveName = uploadPath + File.separator + fileName;
@@ -48,9 +48,11 @@ public class UploadController {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
 		}
 		return "formUpload";
 	}
+	
 	
 	@GetMapping("upload")
 	public void uploadPage() {}
@@ -99,6 +101,7 @@ public class UploadController {
 	    
 	    return imageList;
 	}
+	
 	private String makeFolder() {
 		String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
 		// LocalDate를 문자열로 포멧
